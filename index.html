@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>NPI-Q SUMMARY</title>
+  <style>
+    :root { font-family: "Segoe UI", Arial, "Noto Sans TC", sans-serif; color-scheme: light; --ink:#243449; --muted:#5c7084; --line:#d9e4ec; --blue:#245c83; --pale:#eef5f9; }
+    * { box-sizing: border-box; }
+    body { max-width: 1440px; margin: 0 auto; padding: 32px 24px 64px; color: var(--ink); background: #f5f8fb; }
+    main { background:#fff; border:1px solid #e0e9f0; border-radius:20px; padding:30px 32px 36px; box-shadow:0 12px 38px rgba(32,62,82,.055); }
+    h2 { text-align: center; margin: 0 0 8px; font-size: clamp(26px, 3vw, 34px); letter-spacing:.075em; font-weight:750; color:#203c54; }
+    .subtitle {text-align:center; color:var(--muted); margin:0 0 28px; font-size:14px; letter-spacing:.025em;}
+    h3 { margin: 28px 0 12px; font-size:20px; color:#254961; }
+    .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; border: 1px solid var(--line); border-radius: 12px; }
+    table { width: 100%; min-width: 1050px; border-collapse: collapse; table-layout: fixed; }
+    col.item-col { width: 235px; }
+    col.yes-col { width: 70px; }
+    th, td { border: 1px solid #e0e8ee; padding: 0; text-align: center; }
+    thead th { background: #eaf2f7; padding: 17px 8px; font-size: 19px; line-height: 1.45; color:#23465f; font-weight:700; }
+    thead small { font-size: 14px; font-weight: 500; color:var(--muted); }
+    tbody tr:nth-child(even) { background: #f9fbfd; }
+    td.item-name { padding: 14px 14px; text-align: left; font-size: 18px; font-weight: 550; line-height:1.35; }
+    .tap-target { display: flex; align-items: center; justify-content: center; width: 100%; min-height: 52px; cursor: pointer; position: relative; transition:background .14s; }
+    .tap-target:hover { background: #edf6fd; }
+    .tap-target:has(input:focus-visible) { outline: 3px solid #2b6cb0; outline-offset: -3px; }
+    .tap-target:has(input:checked) { background: #e0f0fa; }
+    .tap-target:has(input:disabled) { cursor: not-allowed; opacity: .43; }
+    input[type="checkbox"], input[type="radio"] { width: 18px; height: 18px; margin: 0; accent-color: #246b94; cursor: pointer; }
+    input:disabled { cursor: not-allowed; }
+    .choice-number { position: absolute; bottom: 3px; right: 6px; font-size: 11px; color: #6e8090; pointer-events: none; }
+    .total-row th, .total-row td { background: #eaf3f9; font-size: 22px; font-weight: 750; height: 57px; color:#204b6c; }
+    .total-row th { font-size: 18px; }
+    .actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
+    button { min-height: 46px; padding: 10px 19px; border: 0; border-radius: 9px; color: #fff; background: #275e81; font-size: 16px; font-weight: 650; cursor: pointer; transition:background .15s,transform .15s; }
+    button:hover { filter: brightness(.95); transform:translateY(-1px); }
+    button:focus-visible { outline: 3px solid #f0b65b; outline-offset: 3px; }
+    #copy-button, #copy-certificate-button { background: #24766b; }
+    #reset-button { background: #687989; }
+    #status, #certificate-status { min-height: 22px; margin: 10px 0 0; font-size: 14px; color: #24766b; }
+    pre { white-space: pre-wrap; overflow-wrap: anywhere; background: #f8fafc; padding: 20px; border: 1px solid var(--line); border-radius: 10px; text-align: left; font-size: 15px; line-height: 1.75; margin:0; }
+    .certificate-section { margin-top: 30px; border-top:1px solid var(--line); padding-top:8px; }
+    .certificate-fields { display:flex; align-items:end; gap:16px; flex-wrap:wrap; margin:14px 0 18px; }
+    .field {display:flex; flex-direction:column; gap:7px; min-width:165px;}
+    .field label {font-size:15px; font-weight:650; color:#34566e;}
+    .field input, .field select { font:inherit; font-size:16px; min-height:44px; border:1px solid #bacbd8; padding:9px 12px; border-radius:8px; background:white; color:var(--ink); }
+    .field input:focus-visible,.field select:focus-visible {outline:3px solid #badbee; border-color:#3a789e;}
+    .certificate-text { font-size:17px; line-height:1.95; background:#fbfcfe; white-space:pre-wrap; font-family:inherit; }
+    .hint {font-size:13px; color:var(--muted); margin:7px 0 0;}
+    @media(max-width:650px) { body { padding: 12px 8px 28px; } main{padding:22px 13px;} .actions button { flex: 1 1 145px; } h2 { letter-spacing:.03em; } .field {flex:1 1 140px;} }
+  </style>
+</head>
+<body>
+<main>
+  <h2>NPI-Q SUMMARY</h2>
+  <p class="subtitle">Neuropsychiatric Inventory Questionnaire · Clinical Scoring</p>
+  <form id="npiq-form">
+    <div class="table-scroll" role="region" aria-label="NPI-Q scoring table" tabindex="0">
+      <table>
+        <colgroup>
+          <col class="item-col"><col class="yes-col"><col span="10">
+        </colgroup>
+        <thead>
+          <tr>
+            <th scope="col"> </th>
+            <th scope="col">Yes</th>
+            <th scope="colgroup" colspan="4">Severity<br><small>(0=None, 1=Mild, 2=Mod, 3=Severe)</small></th>
+            <th scope="colgroup" colspan="6">Caregiver Distress<br><small>(0=Not at all → 5=Extremely)</small></th>
+          </tr>
+        </thead>
+        <tbody id="item-rows"></tbody>
+        <tfoot>
+          <tr class="total-row">
+            <th colspan="2" scope="row">TOTAL</th>
+            <td colspan="4" id="severity-total">0</td>
+            <td colspan="6" id="distress-total">0</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+    <div class="actions">
+      <button type="button" id="generate-button">Generate Summary</button>
+      <button type="button" id="copy-button">Copy Report</button>
+      <button type="button" id="reset-button">Reset</button>
+    </div>
+    <p id="status" aria-live="polite"></p>
+  </form>
+  <h3>Summary Output:</h3>
+  <pre id="output" aria-live="polite"></pre>
+
+  <section class="certificate-section" aria-labelledby="certificate-heading">
+    <h3 id="certificate-heading">診斷書文字生成</h3>
+    <div class="certificate-fields">
+      <div class="field">
+        <label for="exam-date">心智測驗日期</label>
+        <input type="date" id="exam-date" aria-label="心智測驗日期">
+      </div>
+      <div class="field">
+        <label for="cdr-score">CDR 分數</label>
+        <input type="number" id="cdr-score" min="0" max="3" step="0.5" placeholder="請輸入 CDR" inputmode="decimal" aria-label="CDR 分數">
+      </div>
+    </div>
+    <pre id="certificate-output" class="certificate-text" aria-live="polite"></pre>
+    <p class="hint">日期與 CDR 由使用者填寫；NPI-Q 分數依上方量表自動更新。正式使用前請確認內容。</p>
+    <div class="actions"><button type="button" id="copy-certificate-button">Copy Certificate Text</button></div>
+    <p id="certificate-status" aria-live="polite"></p>
+  </section>
+</main>
+
+  <script>
+    'use strict';
+    const items = [
+      'Delusions', 'Hallucinations', 'Agitation/Aggression', 'Dysphoria/Depression', 'Anxiety',
+      'Euphoria/Elation', 'Apathy/Indifference', 'Disinhibition', 'Irritability/Lability',
+      'Aberrant Motor', 'Nighttime Behavior', 'Appetite/Eating'
+    ];
+    const rows = document.getElementById('item-rows');
+    const status = document.getElementById('status');
+
+    function choiceCell(kind, index, value) {
+      const td = document.createElement('td');
+      const label = document.createElement('label');
+      label.className = 'tap-target';
+      label.title = `${items[index]} — ${kind === 'severity' ? 'Severity' : 'Caregiver Distress'} ${value}`;
+      const input = document.createElement('input');
+      input.type = 'radio';
+      input.className = kind;
+      input.name = `${kind}_${index}`;
+      input.value = String(value);
+      input.disabled = true;
+      input.setAttribute('aria-label', label.title);
+      const hint = document.createElement('span');
+      hint.className = 'choice-number';
+      hint.textContent = String(value);
+      hint.setAttribute('aria-hidden', 'true');
+      label.append(input, hint);
+      td.appendChild(label);
+      return td;
+    }
+
+    items.forEach((item, i) => {
+      const tr = document.createElement('tr');
+      const nameCell = document.createElement('td');
+      nameCell.className = 'item-name';
+      nameCell.textContent = item;
+      tr.appendChild(nameCell);
+      const yesCell = document.createElement('td');
+      const yesLabel = document.createElement('label');
+      yesLabel.className = 'tap-target';
+      yesLabel.title = `${item} — Yes`;
+      const checkbox = document.createElement('input');
+      checkbox.type = 'checkbox';
+      checkbox.className = 'yes-check';
+      checkbox.dataset.index = String(i);
+      checkbox.setAttribute('aria-label', yesLabel.title);
+      yesLabel.appendChild(checkbox);
+      yesCell.appendChild(yesLabel);
+      tr.appendChild(yesCell);
+      for (let j = 0; j <= 3; j++) tr.appendChild(choiceCell('severity', i, j));
+      for (let j = 0; j <= 5; j++) tr.appendChild(choiceCell('distress', i, j));
+      rows.appendChild(tr);
+    });
+
+    function inputsFor(index, kind) {
+      return document.querySelectorAll(`input[name="${kind}_${index}"]`);
+    }
+
+    function updateTotals() {
+      const sum = kind => [...document.querySelectorAll(`input.${kind}:checked:not(:disabled)`)]
+        .reduce((total, input) => total + Number(input.value), 0);
+      document.getElementById('severity-total').textContent = sum('severity');
+      document.getElementById('distress-total').textContent = sum('distress');
+      updateCertificate();
+    }
+
+    function certificateText() {
+      const isoDate = document.getElementById('exam-date').value;
+      const date = /^\d{4}-\d{2}-\d{2}$/.test(isoDate) ? isoDate.replace(/-/g, '年').replace(/年(\d{2})$/, '月$1日') : '____年__月__日';
+      const cdr = document.getElementById('cdr-score').value.trim() || '____';
+      const severity = document.getElementById('severity-total').textContent;
+      const distress = document.getElementById('distress-total').textContent;
+      return `該病患因上述疾病於本院追蹤，於${date}心智測驗報告CDR為${cdr}分。NPIQ量表：疾病嚴重度${severity}分，照顧者負荷${distress}分`;
+    }
+
+    function updateCertificate() {
+      document.getElementById('certificate-output').textContent = certificateText();
+      document.getElementById('certificate-status').textContent = '';
+    }
+
+    function createReport() {
+      const severityTotal = [...document.querySelectorAll('input.severity:checked:not(:disabled)')]
+        .reduce((sum, input) => sum + Number(input.value), 0);
+      const distressTotal = [...document.querySelectorAll('input.distress:checked:not(:disabled)')]
+        .reduce((sum, input) => sum + Number(input.value), 0);
+      const detailLines = items.map((item, i) => {
+        const sev = document.querySelector(`input[name="severity_${i}"]:checked:not(:disabled)`);
+        const dis = document.querySelector(`input[name="distress_${i}"]:checked:not(:disabled)`);
+        return `${item.padEnd(22)} | Severity: ${sev ? sev.value : '-'} | Distress: ${dis ? dis.value : '-'}`;
+      }).join('\n');
+      return `=== NPI-Q Summary ===\nSeverity Total: ${severityTotal}\nCaregiver Distress Total: ${distressTotal}\n\nDetails:\n` + detailLines;
+    }
+
+    function generateSummary() {
+      updateTotals();
+      const report = createReport();
+      document.getElementById('output').textContent = report;
+      status.textContent = '';
+      return report;
+    }
+
+    rows.addEventListener('change', event => {
+      const input = event.target;
+      if (input.matches('.yes-check')) {
+        const i = input.dataset.index;
+        for (const kind of ['severity', 'distress']) {
+          inputsFor(i, kind).forEach(radio => {
+            if (!input.checked) radio.checked = false;
+            radio.disabled = !input.checked;
+          });
+        }
+      }
+      updateTotals();
+      // Prevent a stale report from showing after any selections change.
+      document.getElementById('output').textContent = '';
+      status.textContent = '';
+    });
+
+    async function copyText(text, statusElement, fallbackTarget) {
+      try {
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(text);
+        } else {
+          const helper = document.createElement('textarea');
+          helper.value = text;
+          helper.style.position = 'fixed';
+          helper.style.left = '-9999px';
+          document.body.appendChild(helper);
+          helper.select();
+          const succeeded = document.execCommand('copy');
+          helper.remove();
+          if (!succeeded) throw new Error('Copy command failed');
+        }
+        statusElement.textContent = '已複製到剪貼簿。';
+      } catch (error) {
+        statusElement.textContent = `無法自動複製，請選取下方「${fallbackTarget}」文字手動複製。`;
+      }
+    }
+
+    function copyReport() {
+      const report = generateSummary();
+      return copyText(report, status, 'Summary Output');
+    }
+
+    function copyCertificate() {
+      updateCertificate();
+      return copyText(certificateText(), document.getElementById('certificate-status'), '診斷書文字');
+    }
+
+    function resetForm() {
+      document.getElementById('npiq-form').reset();
+      document.querySelectorAll('input.severity, input.distress').forEach(input => {
+        input.checked = false;
+        input.disabled = true;
+      });
+      document.getElementById('severity-total').textContent = '0';
+      document.getElementById('distress-total').textContent = '0';
+      document.getElementById('output').textContent = '';
+      document.getElementById('exam-date').value = '';
+      document.getElementById('cdr-score').value = '';
+      updateCertificate();
+      status.textContent = 'Form reset.';
+    }
+
+    document.getElementById('generate-button').addEventListener('click', generateSummary);
+    document.getElementById('copy-button').addEventListener('click', copyReport);
+    document.getElementById('reset-button').addEventListener('click', resetForm);
+    document.getElementById('exam-date').addEventListener('input', updateCertificate);
+    document.getElementById('cdr-score').addEventListener('input', updateCertificate);
+    document.getElementById('copy-certificate-button').addEventListener('click', copyCertificate);
+    updateCertificate();
+  </script>
+</body>
+</html>
